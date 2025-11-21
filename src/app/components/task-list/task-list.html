@@ -1,0 +1,105 @@
+<div class="container">
+  <h1>📝 Minha TodoList</h1>
+  
+  <!-- Formulário para nova task -->
+  <div class="add-task-form">
+    <h3>Adicionar Nova Task</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <input 
+          type="text" 
+          [(ngModel)]="newTask.title" 
+          placeholder="Título da task..."
+          class="form-input"
+        >
+      </div>
+      <div class="form-group">
+        <textarea 
+          [(ngModel)]="newTask.description" 
+          placeholder="Descrição..."
+          class="form-textarea"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <select [(ngModel)]="newTask.priority" class="form-select">
+          <option [value]="1">📊 Baixa</option>
+          <option [value]="2">📈 Média</option>
+          <option [value]="3">🚨 Alta</option>
+        </select>
+      </div>
+      <button (click)="createTask()" class="btn btn-primary">➕ Adicionar</button>
+    </div>
+  </div>
+
+  <!-- Tabela de tasks -->
+  <div class="table-container">
+    <h3>Minhas Tasks ({{tasks.length}})</h3>
+    
+    <div *ngIf="tasks.length === 0" class="no-tasks">
+      🎉 Nenhuma task encontrada! Crie sua primeira task acima.
+    </div>
+
+    <table *ngIf="tasks.length > 0" class="tasks-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Título</th>
+          <th>Descrição</th>
+          <th>Prioridade</th>
+          <th>Criada em</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks" [class.completed]="task.completed">
+          <!-- Status -->
+          <td class="status-cell">
+            <button 
+              (click)="toggleComplete(task)" 
+              class="status-btn"
+              [class.completed]="task.completed"
+            >
+              {{task.completed ? '✅' : '⏳'}}
+            </button>
+          </td>
+          
+          <!-- Título -->
+          <td class="title-cell">
+            <span [class.completed]="task.completed">{{task.title}}</span>
+          </td>
+          
+          <!-- Descrição -->
+          <td class="description-cell">
+            {{task.description || '-'}}
+          </td>
+          
+          <!-- Prioridade -->
+          <td class="priority-cell">
+            <span class="priority-badge" [class]="getPriorityClass(task.priority)">
+              {{getPriorityText(task.priority)}}
+            </span>
+          </td>
+          
+          <!-- Data -->
+          <td class="date-cell">
+            <small>{{task.createdAt | date:'dd/MM/yy HH:mm'}}</small>
+          </td>
+          
+          <!-- Ações -->
+          <td class="actions-cell">
+            <button (click)="deleteTask(task.id!)" class="btn btn-danger btn-small">
+              🗑️
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Estatísticas -->
+    <div *ngIf="tasks.length > 0" class="stats">
+      <small>
+        📊 Total: {{tasks.length}} | 
+      </small>
+    </div>
+  </div>
+</div>
